@@ -1806,6 +1806,17 @@ class PublisherContext extends AbstractExtensibleContext {
         }
     }
 
+    void worksone(@DslContext(WorksoneContext) Closure closure) {
+        WorksoneContext context = new WorksoneContext()
+        ContextHelper.executeInContext(closure, context)
+
+        publisherNodes << new NodeBuilder().'jenkins.worksone.client.HttpPostPublisher' {
+            recipients(context.recipients)
+            always(context.always)
+            backToNormal(context.backToNormal)
+        }
+    }
+
     @Override
     protected void addExtensionNode(Node node) {
         publisherNodes << node
